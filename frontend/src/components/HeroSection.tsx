@@ -88,7 +88,7 @@ export default function HeroSection() {
               Launch App
             </motion.button>
           </Link>
-          <Link href="#features">
+          <Link href="/network">
             <motion.button
               className="btn-ghost"
               style={{ padding: '1rem 2.5rem', fontSize: '1.125rem' }}
