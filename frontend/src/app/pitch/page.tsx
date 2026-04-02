@@ -595,6 +595,7 @@ function releaseFunds() public {
 
 export default function PitchDeck() {
   const [current, setCurrent] = useState(0);
+  const [printMode, setPrintMode] = useState(false);
   const total = slides.length;
 
   const go = useCallback(
@@ -608,6 +609,16 @@ export default function PitchDeck() {
     },
     [total],
   );
+
+  const handleDownload = useCallback(() => {
+    setPrintMode(true);
+    // Allow React to render the print view before printing
+    setTimeout(() => {
+      window.print();
+      // Return to slideshow after print dialog closes
+      setTimeout(() => setPrintMode(false), 500);
+    }, 300);
+  }, []);
 
   /* keyboard controls */
   useEffect(() => {
@@ -642,6 +653,70 @@ export default function PitchDeck() {
   }, [go]);
 
   const slide = slides[current];
+
+  /* ── Print Mode: render all slides stacked ── */
+  if (printMode) {
+    return (
+      <div className="pitch-print-root">
+        {slides.map((s) => (
+          <div key={s.id} className="pitch-print-slide">
+            <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 40%, rgba(0,212,255,0.06) 0%, rgba(82,3,213,0.04) 50%, transparent 100%)', pointerEvents: 'none' }} />
+            <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%' }}>
+              {s.content}
+            </div>
+          </div>
+        ))}
+        <style>{`
+          .pitch-print-root {
+            background: #0a0e1a;
+            color: #dfe2f3;
+            font-family: var(--font-body);
+          }
+          .pitch-print-slide {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #0a0e1a;
+            overflow: hidden;
+            page-break-after: always;
+            break-after: page;
+          }
+          .pitch-print-slide:last-child {
+            page-break-after: auto;
+            break-after: auto;
+          }
+          @media print {
+            @page {
+              size: landscape;
+              margin: 0;
+            }
+            html, body {
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+              color-adjust: exact !important;
+            }
+            body * { visibility: hidden; }
+            .pitch-print-root, .pitch-print-root * { visibility: visible; }
+            .pitch-print-root {
+              position: absolute;
+              left: 0;
+              top: 0;
+            }
+            .pitch-print-slide {
+              position: relative;
+              width: 100vw;
+              height: 100vh;
+              page-break-after: always;
+              break-after: page;
+              page-break-inside: avoid;
+              break-inside: avoid;
+            }
+          }
+          .pitch-glass { transition: none; }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -702,10 +777,29 @@ export default function PitchDeck() {
           zIndex: 10,
         }}
       >
-        {/* left: brand */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span className="material-symbols-outlined" style={{ color: '#00d4ff', fontSize: '1.1rem', fontVariationSettings: "'FILL' 1" }}>shield_with_heart</span>
-          <span style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '0.85rem', color: '#859398' }}>RentEscrow</span>
+        {/* left: brand + download */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span className="material-symbols-outlined" style={{ color: '#00d4ff', fontSize: '1.1rem', fontVariationSettings: "'FILL' 1" }}>shield_with_heart</span>
+            <span style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '0.85rem', color: '#859398' }}>RentEscrow</span>
+          </div>
+          <button
+            onClick={handleDownload}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '0.4rem',
+              padding: '0.4rem 0.85rem', borderRadius: '0.5rem',
+              background: 'linear-gradient(135deg, rgba(0,212,255,0.15), rgba(82,3,213,0.15))',
+              border: '1px solid rgba(0,212,255,0.2)',
+              color: '#a8e8ff', fontSize: '0.75rem', fontWeight: 600,
+              fontFamily: 'var(--font-headline)',
+              cursor: 'pointer', transition: 'all 200ms ease',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'linear-gradient(135deg, rgba(0,212,255,0.25), rgba(82,3,213,0.25))'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'linear-gradient(135deg, rgba(0,212,255,0.15), rgba(82,3,213,0.15))'; }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '0.95rem' }}>download</span>
+            Download PDF
+          </button>
         </div>
 
         {/* center: slide dots */}
@@ -776,6 +870,10 @@ export default function PitchDeck() {
         .pitch-glass { transition: box-shadow 300ms ease, transform 300ms ease; }
         .pitch-glass:hover { box-shadow: 0 0 30px rgba(168,232,255,0.06); }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.2)} }
+        @media print {
+          body * { visibility: hidden !important; }
+          .pitch-print-root, .pitch-print-root * { visibility: visible !important; }
+        }
       `}</style>
     </div>
   );
