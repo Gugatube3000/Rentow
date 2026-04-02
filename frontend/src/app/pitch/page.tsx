@@ -14,7 +14,7 @@ interface Slide {
   content: React.ReactNode;
 }
 
-/* ─── reusable pieces ─── */
+/* ─── Reusable Components ─── */
 
 const GlassCard = ({ children, style, className = '' }: any) => (
   <div
@@ -82,29 +82,6 @@ const IconBox = ({ icon, bg = 'rgba(0,212,255,0.12)', color = '#00d4ff', size = 
   </div>
 );
 
-const FeatureCard = ({ icon, title, desc, bg, color }: any) => (
-  <GlassCard style={{ padding: '2rem', flex: 1, minWidth: '220px' }}>
-    <IconBox icon={icon} bg={bg} color={color} />
-    <h3 style={{ fontFamily: 'var(--font-headline)', fontSize: '1.25rem', fontWeight: 700, margin: '1.25rem 0 0.75rem', color: '#dfe2f3' }}>
-      {title}
-    </h3>
-    <p style={{ color: '#bbc9cf', fontSize: '0.875rem', lineHeight: 1.65 }}>{desc}</p>
-  </GlassCard>
-);
-
-const ProcessStep = ({ num, icon, title, desc }: any) => (
-  <div style={{ flex: 1, display: 'flex', flexDirection: 'column' as const, alignItems: 'center', textAlign: 'center' as const, gap: '0.75rem', minWidth: '140px' }}>
-    <div style={{ position: 'relative' as const }}>
-      <IconBox icon={icon} bg="rgba(38,42,55,0.8)" color="#a8e8ff" size="3.5rem" />
-      <span style={{ position: 'absolute', top: '-0.4rem', right: '-0.4rem', background: 'linear-gradient(135deg, #00d4ff, #5203d5)', width: '1.5rem', height: '1.5rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 800, color: '#fff' }}>
-        {num}
-      </span>
-    </div>
-    <h4 style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '0.95rem', color: '#dfe2f3' }}>{title}</h4>
-    <p style={{ fontSize: '0.8rem', color: '#859398', lineHeight: 1.5 }}>{desc}</p>
-  </div>
-);
-
 const StatCard = ({ label, value, color, sub }: any) => (
   <GlassCard style={{ padding: '1.25rem', textAlign: 'center' as const }}>
     <div style={{ fontSize: '0.6rem', fontWeight: 600, textTransform: 'uppercase' as const, letterSpacing: '0.12em', color: '#859398', marginBottom: '0.5rem' }}>{label}</div>
@@ -120,7 +97,7 @@ const RoadmapRow = ({ icon, status, title, desc }: any) => {
     <div style={{ display: 'flex', gap: '1.25rem', padding: '1rem 0', borderBottom: '1px solid rgba(255,255,255,0.04)', alignItems: 'flex-start' }}>
       <span className="material-symbols-outlined" style={{ color: isLive ? '#00ff88' : isBeta ? '#ffd54f' : '#859398', marginTop: '0.1rem', fontSize: '1.4rem' }}>{icon}</span>
       <div style={{ flex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem', flexWrap: 'wrap' as const }}>
           <span style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '1rem', color: '#dfe2f3' }}>{title}</span>
           <span style={{
             fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.1em',
@@ -141,14 +118,13 @@ const RoadmapRow = ({ icon, status, title, desc }: any) => {
    ───────────────────────────────────────────── */
 
 const slides: Slide[] = [
-  /* ── 1 TITLE ── */
+  /* ── 1  TITLE & HOOK ── */
   {
     id: 1,
     label: 'Title',
     title: 'RentEscrow',
     content: (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', gap: '2rem', padding: '2rem' }}>
-        {/* logo icon */}
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', duration: 0.8 }}>
           <div style={{ width: '6rem', height: '6rem', borderRadius: '2rem', background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 60px rgba(0,212,255,0.15)' }}>
             <span className="material-symbols-outlined" style={{ fontSize: '3rem', color: '#00d4ff', fontVariationSettings: "'FILL' 1" }}>shield_with_heart</span>
@@ -187,7 +163,7 @@ const slides: Slide[] = [
     ),
   },
 
-  /* ── 2 PROBLEM ── */
+  /* ── 2  THE PROBLEM ── */
   {
     id: 2,
     label: 'Problem',
@@ -204,7 +180,7 @@ const slides: Slide[] = [
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {[
             { icon: 'account_balance', color: '#ffb4ab', title: 'Dead Money', desc: 'Deposits earn the landlord interest — tenants get nothing back.' },
-            { icon: 'visibility_off', color: '#ffd54f', title: 'Zero Transparency', desc: 'Where is your money? Wire it and pray. You\'ll never know.' },
+            { icon: 'visibility_off', color: '#ffd54f', title: 'Zero Transparency', desc: "Where is your money? Wire it and pray. You'll never know." },
             { icon: 'dangerous', color: '#ff6b6b', title: 'Fraud & Theft', desc: '$504M lost to rental scams in the US alone (FTC, 2024).' },
           ].map((item, i) => (
             <motion.div
@@ -227,95 +203,156 @@ const slides: Slide[] = [
     ),
   },
 
-  /* ── 3 SOLUTION ── */
+  /* ── 3  THE SOLUTION (with laptop mockup) ── */
   {
     id: 3,
     label: 'Solution',
     title: 'The Solution',
     content: (
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', padding: '3rem', gap: '2.5rem', maxWidth: '64rem', margin: '0 auto' }}>
-        <div style={{ textAlign: 'center' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', padding: '2.5rem', gap: '3rem', maxWidth: '72rem', margin: '0 auto' }}>
+        {/* Left: Text */}
+        <div style={{ flex: 1, minWidth: '280px' }}>
           <SectionLabel>The Solution</SectionLabel>
-          <h2 style={{ fontFamily: 'var(--font-headline)', fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', fontWeight: 700, color: '#dfe2f3', lineHeight: 1.2 }}>
-            What if your deposit could<br />protect itself <GradientText style={{ fontWeight: 700 }}>and make you money?</GradientText>
+          <h2 style={{ fontFamily: 'var(--font-headline)', fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)', fontWeight: 700, color: '#dfe2f3', lineHeight: 1.15, marginBottom: '2rem' }}>
+            Your deposit protects itself<br /><GradientText style={{ fontWeight: 700 }}>and makes you money.</GradientText>
           </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            {[
+              { icon: 'lock', color: '#00d4ff', title: 'Smart Escrow', desc: 'Multi-signature vaults with dual-verification release.' },
+              { icon: 'query_stats', color: '#cdbdff', title: 'Yield Generation', desc: 'Deposits deployed to Aave V3 for real returns.' },
+              { icon: 'verified_user', color: '#a8e8ff', title: 'Security Shield', desc: 'GoPlus forensics on every wallet, every time.' },
+            ].map(f => (
+              <div key={f.title} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <IconBox icon={f.icon} bg={`${f.color}18`} color={f.color} size="2.75rem" />
+                <div>
+                  <h4 style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '0.95rem', color: '#dfe2f3', marginBottom: '0.15rem' }}>{f.title}</h4>
+                  <p style={{ fontSize: '0.8rem', color: '#859398', lineHeight: 1.4 }}>{f.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <FeatureCard icon="lock" title="Smart Escrow" desc="Multi-signature vaults with dual-verification. Fully automated release upon lease expiration." bg="rgba(0,212,255,0.12)" color="#00d4ff" />
-          <FeatureCard icon="query_stats" title="Yield Generation" desc="Deposits deployed into Aave V3 to generate market-leading returns for tenants." bg="rgba(82,3,213,0.15)" color="#cdbdff" />
-          <FeatureCard icon="verified_user" title="Security Shield" desc="Real-time GoPlus forensics — phishing detection, blackist checks, history scanning." bg="rgba(168,232,255,0.12)" color="#a8e8ff" />
-        </div>
-
+        {/* Right: Laptop mockup */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          style={{ textAlign: 'center' }}
+          initial={{ opacity: 0, x: 60 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3, duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+          style={{ flex: 1, minWidth: '320px', maxWidth: '520px' }}
         >
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1.25rem', borderRadius: '9999px', background: 'rgba(38,42,55,0.6)', border: '1px solid rgba(0,212,255,0.15)', fontSize: '0.8rem', color: '#a8e8ff' }}>
-            <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>language</span>
-            rentow-xi.vercel.app
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/pitch/laptop-hero.png"
+            alt="RentEscrow Landing Page"
+            style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 60px rgba(0,212,255,0.12))' }}
+          />
         </motion.div>
       </div>
     ),
   },
 
-  /* ── 4 SMART ESCROW ── */
+  /* ── 4  PRODUCT WALKTHROUGH — FEATURES (with laptop) ── */
   {
     id: 4,
-    label: 'Smart Escrow',
-    title: 'Smart Escrow',
+    label: 'Features',
+    title: 'Core Features',
     content: (
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', padding: '2.5rem', gap: '2.5rem', maxWidth: '64rem', margin: '0 auto' }}>
-        <div>
-          <SectionLabel>Architecture</SectionLabel>
-          <h2 style={{ fontFamily: 'var(--font-headline)', fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, color: '#dfe2f3' }}>
-            The Escrow Lifecycle
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', padding: '2.5rem', gap: '3rem', maxWidth: '72rem', margin: '0 auto' }}>
+        {/* Left: Laptop mockup */}
+        <motion.div
+          initial={{ opacity: 0, x: -60 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2, duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+          style={{ flex: 1, minWidth: '320px', maxWidth: '520px' }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/pitch/laptop-features.png"
+            alt="RentEscrow Features"
+            style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 60px rgba(0,212,255,0.12))' }}
+          />
+        </motion.div>
+
+        {/* Right: Feature breakdown */}
+        <div style={{ flex: 1, minWidth: '280px' }}>
+          <SectionLabel>Product Walkthrough</SectionLabel>
+          <h2 style={{ fontFamily: 'var(--font-headline)', fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)', fontWeight: 700, color: '#dfe2f3', lineHeight: 1.15, marginBottom: '2rem' }}>
+            Three pillars of<br /><GradientText>rental trust.</GradientText>
           </h2>
-        </div>
 
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <ProcessStep num="1" icon="assignment_add" title="Create Lease" desc="Landlord outlines rent, deposit & terms." />
-          <div style={{ display: 'flex', alignItems: 'center', color: '#3c494e', fontSize: '1.5rem' }}>→</div>
-          <ProcessStep num="2" icon="account_balance" title="Fund Contract" desc="Student locks funds in non-custodial contract." />
-          <div style={{ display: 'flex', alignItems: 'center', color: '#3c494e', fontSize: '1.5rem' }}>→</div>
-          <ProcessStep num="3" icon="verified" title="Meet Milestones" desc="Contract holds until lease conditions are met." />
-          <div style={{ display: 'flex', alignItems: 'center', color: '#3c494e', fontSize: '1.5rem' }}>→</div>
-          <ProcessStep num="4" icon="send_money" title="Secure Release" desc="Both parties confirm; funds auto-disburse." />
-        </div>
-
-        <GlassCard style={{ padding: '1.5rem', overflow: 'hidden', border: '1px solid rgba(0,212,255,0.1)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', paddingBottom: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-            <span style={{ width: '0.6rem', height: '0.6rem', borderRadius: '50%', background: '#ff5f57' }} />
-            <span style={{ width: '0.6rem', height: '0.6rem', borderRadius: '50%', background: '#febc2e' }} />
-            <span style={{ width: '0.6rem', height: '0.6rem', borderRadius: '50%', background: '#28c840' }} />
-            <span style={{ fontSize: '0.7rem', color: '#859398', marginLeft: '0.5rem' }}>RentEscrow.sol</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            {[
+              { num: '01', title: 'Smart Escrow Vaults', desc: 'Your deposit goes into an immutable Solidity smart contract. Non-custodial — nobody can touch it. Both tenant and landlord must confirm before funds release.', color: '#00d4ff' },
+              { num: '02', title: 'Automated Yield on Aave', desc: 'While locked, your deposit is deployed to Aave V3 lending pools. Market-rate yields returned directly to the tenant when the lease ends.', color: '#cdbdff' },
+              { num: '03', title: 'GoPlus Threat Intelligence', desc: 'Every wallet is scanned for phishing, blacklists, and malicious on-chain history before any transaction is allowed.', color: '#a8e8ff' },
+            ].map(f => (
+              <div key={f.num} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                <span style={{ fontFamily: 'var(--font-headline)', fontWeight: 800, fontSize: '1.5rem', color: f.color, lineHeight: 1, minWidth: '2rem' }}>{f.num}</span>
+                <div>
+                  <h4 style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '0.95rem', color: '#dfe2f3', marginBottom: '0.3rem' }}>{f.title}</h4>
+                  <p style={{ fontSize: '0.8rem', color: '#859398', lineHeight: 1.55 }}>{f.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
-          <pre style={{ fontFamily: "'Fira Code', 'SF Mono', monospace", fontSize: 'clamp(0.65rem, 1.2vw, 0.85rem)', lineHeight: 1.7, color: '#bbc9cf', margin: 0, overflow: 'auto' }}>
-            <code>{`function confirmLease() public {
-    require(msg.sender == tenant || msg.sender == landlord);
-    if (msg.sender == tenant) tenantConfirmed = true;
-    else landlordConfirmed = true;
-    confirmed = tenantConfirmed && landlordConfirmed;
-}
-
-function releaseFunds() public {
-    require(confirmed, "Lease not confirmed");
-    uint yieldAmount = (amount * yieldPercent) / 100;
-    payable(landlord).transfer(amount - yieldAmount);
-    payable(tenant).transfer(yieldAmount);  // ← tenant gets yield
-}`}</code>
-          </pre>
-        </GlassCard>
+        </div>
       </div>
     ),
   },
 
-  /* ── 5 YIELD ── */
+  /* ── 5  LIVE DASHBOARD (with laptop) ── */
   {
     id: 5,
+    label: 'Dashboard',
+    title: 'Live Dashboard',
+    content: (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', padding: '2.5rem', gap: '3rem', maxWidth: '72rem', margin: '0 auto' }}>
+        {/* Left: Text */}
+        <div style={{ flex: 1, minWidth: '260px' }}>
+          <SectionLabel>Live Product</SectionLabel>
+          <h2 style={{ fontFamily: 'var(--font-headline)', fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)', fontWeight: 700, color: '#dfe2f3', lineHeight: 1.15, marginBottom: '1.5rem' }}>
+            The dashboard is<br /><GradientText>production-ready.</GradientText>
+          </h2>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {[
+              { icon: 'wallet', label: 'Connect Wallet', desc: 'MetaMask, Coinbase, WalletConnect — one click.' },
+              { icon: 'assignment', label: 'Manage Leases', desc: 'Track active, pending, and completed escrows.' },
+              { icon: 'monitoring', label: 'Network Status', desc: 'Live gas, block height, and chain analytics.' },
+              { icon: 'pie_chart', label: 'Yield Statistics', desc: 'Real-time APY from Aave V3 lending pools.' },
+            ].map(f => (
+              <div key={f.label} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', color: '#00d4ff' }}>{f.icon}</span>
+                <div>
+                  <span style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '0.85rem', color: '#dfe2f3' }}>{f.label}</span>
+                  <p style={{ fontSize: '0.75rem', color: '#859398', lineHeight: 1.4 }}>{f.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right: Dashboard laptop */}
+        <motion.div
+          initial={{ opacity: 0, x: 60, rotateY: -5 }}
+          animate={{ opacity: 1, x: 0, rotateY: 0 }}
+          transition={{ delay: 0.3, duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+          style={{ flex: 1.2, minWidth: '340px', maxWidth: '560px' }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/pitch/laptop-dashboard.png"
+            alt="RentEscrow Dashboard"
+            style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 20px 60px rgba(82,3,213,0.15))' }}
+          />
+        </motion.div>
+      </div>
+    ),
+  },
+
+  /* ── 6  YIELD ENGINE ── */
+  {
+    id: 6,
     label: 'Yield',
     title: 'Yield Generation',
     content: (
@@ -359,9 +396,9 @@ function releaseFunds() public {
     ),
   },
 
-  /* ── 6 SECURITY ── */
+  /* ── 7  SECURITY SHIELD ── */
   {
-    id: 6,
+    id: 7,
     label: 'Security',
     title: 'Security Shield',
     content: (
@@ -373,49 +410,50 @@ function releaseFunds() public {
           </h2>
         </div>
 
-        {/* Terminal */}
-        <GlassCard style={{ padding: '0', overflow: 'hidden', border: '1px solid rgba(0,255,136,0.08)' }}>
-          <div style={{ padding: '0.75rem 1rem', background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-            <span style={{ width: '0.55rem', height: '0.55rem', borderRadius: '50%', background: '#ff5f57' }} />
-            <span style={{ width: '0.55rem', height: '0.55rem', borderRadius: '50%', background: '#febc2e' }} />
-            <span style={{ width: '0.55rem', height: '0.55rem', borderRadius: '50%', background: '#28c840' }} />
-            <span style={{ fontSize: '0.7rem', color: '#859398', marginLeft: '0.5rem' }}>run_scenario.py — GoPlus Security Scan</span>
+        {/* Visual security scan - NOT terminal code */}
+        <GlassCard style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', border: '1px solid rgba(0,255,136,0.08)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+            <div style={{ width: '3rem', height: '3rem', borderRadius: '50%', background: 'rgba(0,255,136,0.1)', border: '1px solid rgba(0,255,136,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', color: '#00ff88' }}>verified_user</span>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, color: '#dfe2f3', fontSize: '1.1rem' }}>Landlord Wallet Verified</div>
+              <div style={{ fontSize: '0.8rem', color: '#859398' }}>0x742d...4AcE · Trust Score: <span style={{ color: '#00ff88', fontWeight: 700 }}>92/100</span></div>
+            </div>
+            <GlassCard style={{ padding: '0.4rem 1rem', background: 'rgba(0,255,136,0.08)', border: '1px solid rgba(0,255,136,0.2)' }}>
+              <span style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '0.8rem', color: '#00ff88' }}>SAFE</span>
+            </GlassCard>
           </div>
-          <div style={{ padding: '1.5rem', fontFamily: "'Fira Code', 'SF Mono', monospace", fontSize: 'clamp(0.7rem, 1.2vw, 0.85rem)', lineHeight: 1.9 }}>
-            <div style={{ color: '#859398' }}>$ python run_scenario.py</div>
-            <div style={{ color: '#cdbdff' }}>--- 🛡️ STARTING SECURITY SHIELD SCENARIO ---</div>
-            <div style={{ color: '#a8e8ff' }}>📍 Step 1: Found Landlord Address: <span style={{ color: '#00d4ff' }}>0x742d...4AcE</span></div>
-            <div style={{ color: '#ffd54f' }}>🔍 Step 2: Running GoPlus Security Scan...</div>
-            <div style={{ color: '#00ff88', fontWeight: 600 }}>✅ Landlord is SAFE. Trust Score: <span style={{ fontSize: '1.1em' }}>92/100</span></div>
-            <div style={{ color: '#859398', paddingLeft: '1.5rem' }}>├── Phishing: Not detected</div>
-            <div style={{ color: '#859398', paddingLeft: '1.5rem' }}>├── Blacklist: Clean</div>
-            <div style={{ color: '#859398', paddingLeft: '1.5rem' }}>└── Malicious History: None</div>
-            <div style={{ color: '#a8e8ff' }}>📈 Step 3: Contract Yield set to <span style={{ color: '#00ff88' }}>3%</span></div>
-            <div style={{ color: '#cdbdff' }}>--- ✅ SCENARIO COMPLETE ---</div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+            {[
+              { icon: 'phishing', label: 'Phishing', result: 'Not detected', safe: true },
+              { icon: 'block', label: 'Blacklist', result: 'Clean', safe: true },
+              { icon: 'history', label: 'On-chain History', result: 'No threats', safe: true },
+            ].map(c => (
+              <div key={c.label} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem', borderRadius: '1rem', background: 'rgba(0,255,136,0.04)', border: '1px solid rgba(0,255,136,0.08)' }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', color: '#00ff88' }}>check_circle</span>
+                <div>
+                  <div style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '0.8rem', color: '#dfe2f3' }}>{c.label}</div>
+                  <div style={{ fontSize: '0.7rem', color: '#859398' }}>{c.result}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </GlassCard>
 
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-          {[
-            { icon: 'phishing', label: 'Phishing Detection' },
-            { icon: 'block', label: 'Blacklist Check' },
-            { icon: 'history', label: 'History Scan' },
-          ].map((b) => (
-            <GlassCard key={b.label} style={{ padding: '0.75rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <span className="material-symbols-outlined" style={{ fontSize: '1.1rem', color: '#00ff88' }}>{b.icon}</span>
-              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#dfe2f3' }}>{b.label}</span>
-            </GlassCard>
-          ))}
-        </div>
+        <p style={{ textAlign: 'center', fontSize: '0.9rem', color: '#859398', fontStyle: 'italic', maxWidth: '36rem', margin: '0 auto' }}>
+          Powered by <span style={{ color: '#ffd54f', fontWeight: 600 }}>GoPlus Security API</span> — the industry standard for Web3 threat intelligence.
+        </p>
       </div>
     ),
   },
 
-  /* ── 7 TECH STACK ── */
+  /* ── 8  TECH STACK ── */
   {
-    id: 7,
-    label: 'Tech Stack',
-    title: 'Under the Hood',
+    id: 8,
+    label: 'Tech',
+    title: 'Tech Stack',
     content: (
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', padding: '2.5rem', gap: '2rem', maxWidth: '64rem', margin: '0 auto' }}>
         <div style={{ textAlign: 'center' }}>
@@ -425,122 +463,99 @@ function releaseFunds() public {
           </h2>
         </div>
 
-        {/* Architecture flow */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.75rem', alignItems: 'center' }}>
+        {/* Architecture layers */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {[
-            { icon: 'person', label: 'User', sub: 'MetaMask', color: '#dfe2f3' },
-            null,
-            { icon: 'web', label: 'Next.js 16', sub: 'React 19', color: '#00d4ff' },
-            null,
-            { icon: 'code', label: 'RentEscrow.sol', sub: 'Solidity 0.8.20', color: '#cdbdff' },
-            null,
-            { icon: 'hub', label: 'Ethereum', sub: 'EVM', color: '#a8e8ff' },
-          ].map((item, i) =>
-            item === null ? (
-              <span key={`arrow-${i}`} style={{ color: '#3c494e', fontSize: '1.5rem', fontWeight: 300 }}>→</span>
-            ) : (
-              <GlassCard key={item.label} style={{ padding: '1.25rem 1.5rem', textAlign: 'center', minWidth: '120px' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '1.75rem', color: item.color, display: 'block', marginBottom: '0.5rem' }}>{item.icon}</span>
-                <div style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '0.85rem', color: '#dfe2f3' }}>{item.label}</div>
-                <div style={{ fontSize: '0.7rem', color: '#859398' }}>{item.sub}</div>
-              </GlassCard>
-            )
-          )}
-        </div>
-
-        {/* side services */}
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-          {[
-            { icon: 'api', label: 'FastAPI', sub: 'Python Backend', color: '#00ff88' },
-            { icon: 'security', label: 'GoPlus API', sub: 'Threat Intel', color: '#ffd54f' },
-            { icon: 'savings', label: 'Aave V3', sub: 'Yield Protocol', color: '#cdbdff' },
-            { icon: 'monitoring', label: 'DefiLlama', sub: 'Live Data', color: '#a8e8ff' },
-          ].map(s => (
-            <GlassCard key={s.label} style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', color: s.color }}>{s.icon}</span>
-              <div>
-                <div style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '0.8rem', color: '#dfe2f3' }}>{s.label}</div>
-                <div style={{ fontSize: '0.65rem', color: '#859398' }}>{s.sub}</div>
+            { label: 'Frontend', icons: [{ name: 'Next.js 16', c: '#00d4ff' }, { name: 'React 19', c: '#00d4ff' }, { name: 'Wagmi v3', c: '#00d4ff' }, { name: 'RainbowKit', c: '#00d4ff' }, { name: 'Framer Motion', c: '#00d4ff' }], bg: 'rgba(0,212,255,0.06)', border: 'rgba(0,212,255,0.12)' },
+            { label: 'Smart Contracts', icons: [{ name: 'Solidity 0.8.20', c: '#cdbdff' }, { name: 'Hardhat', c: '#cdbdff' }, { name: 'RentEscrow.sol', c: '#cdbdff' }, { name: 'Ethereum EVM', c: '#cdbdff' }], bg: 'rgba(82,3,213,0.06)', border: 'rgba(82,3,213,0.12)' },
+            { label: 'Backend & APIs', icons: [{ name: 'FastAPI (Python)', c: '#00ff88' }, { name: 'GoPlus Security', c: '#ffd54f' }, { name: 'DefiLlama Yields', c: '#a8e8ff' }, { name: 'Aave V3 Protocol', c: '#cdbdff' }], bg: 'rgba(0,255,136,0.04)', border: 'rgba(0,255,136,0.1)' },
+          ].map(layer => (
+            <GlassCard key={layer.label} style={{ padding: '1.25rem 1.5rem', display: 'flex', alignItems: 'center', gap: '1.5rem', background: layer.bg, border: `1px solid ${layer.border}` }}>
+              <span style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#859398', minWidth: '7rem' }}>{layer.label}</span>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                {layer.icons.map(t => (
+                  <span key={t.name} style={{ padding: '0.35rem 0.75rem', borderRadius: '9999px', background: 'rgba(10,14,26,0.5)', border: '1px solid rgba(60,73,78,0.2)', fontSize: '0.75rem', fontWeight: 600, color: t.c }}>
+                    {t.name}
+                  </span>
+                ))}
               </div>
             </GlassCard>
           ))}
         </div>
 
-        {/* Tech badges */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center' }}>
-          {['Solidity 0.8.20', 'Hardhat', 'Next.js 16', 'React 19', 'Wagmi v3', 'Viem', 'RainbowKit v2', 'Framer Motion', 'FastAPI', 'GoPlus API'].map(t => (
-            <span key={t} style={{ padding: '0.35rem 0.75rem', borderRadius: '9999px', background: 'rgba(49,52,66,0.5)', border: '1px solid rgba(60,73,78,0.15)', fontSize: '0.7rem', fontWeight: 500, color: '#bbc9cf' }}>
-              {t}
-            </span>
+        {/* Key highlights */}
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          {[
+            { icon: 'code', label: 'Open Source', desc: 'MIT Licensed' },
+            { icon: 'cloud_upload', label: 'Deployed', desc: 'Vercel Edge' },
+            { icon: 'security', label: 'Audited', desc: 'Non-custodial' },
+            { icon: 'speed', label: 'Performant', desc: '< 2s load time' },
+          ].map(h => (
+            <GlassCard key={h.label} style={{ padding: '0.75rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', color: '#a8e8ff' }}>{h.icon}</span>
+              <div>
+                <div style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '0.75rem', color: '#dfe2f3' }}>{h.label}</div>
+                <div style={{ fontSize: '0.65rem', color: '#859398' }}>{h.desc}</div>
+              </div>
+            </GlassCard>
           ))}
         </div>
       </div>
     ),
   },
 
-  /* ── 8 TARGET AUDIENCE ── */
+  /* ── 9  TARGET AUDIENCE & ROADMAP ── */
   {
-    id: 8,
-    label: 'Audience',
-    title: 'Target Audience',
+    id: 9,
+    label: 'Roadmap',
+    title: 'Audience & Roadmap',
     content: (
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', padding: '2.5rem', gap: '2.5rem', maxWidth: '60rem', margin: '0 auto' }}>
-        <div style={{ textAlign: 'center' }}>
-          <SectionLabel>Product / Market Fit</SectionLabel>
-          <h2 style={{ fontFamily: 'var(--font-headline)', fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, color: '#dfe2f3' }}>
-            Where RentEscrow <GradientText>Thrives</GradientText>
-          </h2>
-        </div>
-
-        <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+      <div style={{ display: 'flex', height: '100%', padding: '2.5rem', gap: '2rem', maxWidth: '72rem', margin: '0 auto' }}>
+        {/* Left: Audience */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '1.5rem', minWidth: '280px' }}>
+          <div>
+            <SectionLabel>Product / Market Fit</SectionLabel>
+            <h2 style={{ fontFamily: 'var(--font-headline)', fontSize: 'clamp(1.25rem, 3vw, 1.75rem)', fontWeight: 700, color: '#dfe2f3' }}>
+              Where RentEscrow <GradientText>Thrives</GradientText>
+            </h2>
+          </div>
           {[
-            { icon: 'public', title: 'Cross-border Students', desc: 'Securely pay international deposits without wire fees or scam risk. Trustless escrow replaces blind faith.', color: '#00d4ff' },
-            { icon: 'group', title: 'Roommate Groups', desc: 'Pool funds into a single smart contract before signing. No more "I\'ll Venmo you later" trust games.', color: '#cdbdff' },
-            { icon: 'flag', title: 'First-time Renters', desc: 'Milestone-based releases protect you — funds only move when the keys are literally in your hand.', color: '#a8e8ff' },
-          ].map((p) => (
-            <GlassCard key={p.title} style={{ padding: '2rem', flex: 1, minWidth: '220px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <span className="material-symbols-outlined" style={{ fontSize: '2.5rem', color: p.color }}>{p.icon}</span>
-              <h3 style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '1.1rem', color: '#dfe2f3' }}>{p.title}</h3>
-              <p style={{ fontSize: '0.85rem', color: '#bbc9cf', lineHeight: 1.6 }}>{p.desc}</p>
+            { icon: 'public', title: 'Cross-border Students', desc: 'Trustless escrow replaces blind faith with wire transfers.', color: '#00d4ff' },
+            { icon: 'group', title: 'Roommate Groups', desc: 'Pool funds into a single contract before signing.', color: '#cdbdff' },
+            { icon: 'flag', title: 'First-time Renters', desc: 'Milestone-based releases — funds move only when keys are in hand.', color: '#a8e8ff' },
+          ].map(p => (
+            <GlassCard key={p.title} style={{ padding: '1.15rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '2rem', color: p.color }}>{p.icon}</span>
+              <div>
+                <h4 style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '0.9rem', color: '#dfe2f3', marginBottom: '0.15rem' }}>{p.title}</h4>
+                <p style={{ fontSize: '0.75rem', color: '#bbc9cf', lineHeight: 1.5 }}>{p.desc}</p>
+              </div>
             </GlassCard>
           ))}
         </div>
 
-        <GlassCard style={{ padding: '1.5rem 2rem', textAlign: 'center', background: 'rgba(255,107,107,0.06)', border: '1px solid rgba(255,107,107,0.15)' }}>
-          <span style={{ fontFamily: 'var(--font-headline)', fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: '#ffb4ab' }}>$504M</span>
-          <span style={{ color: '#bbc9cf', fontSize: '0.9rem', marginLeft: '0.75rem' }}>lost to rental scams in the US — FTC, 2024</span>
-        </GlassCard>
-      </div>
-    ),
-  },
+        {/* Divider */}
+        <div style={{ width: '1px', background: 'linear-gradient(180deg, transparent 0%, rgba(0,212,255,0.15) 50%, transparent 100%)', margin: '2rem 0' }} />
 
-  /* ── 9 ROADMAP ── */
-  {
-    id: 9,
-    label: 'Roadmap',
-    title: "What's Next",
-    content: (
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', padding: '2.5rem', gap: '2rem', maxWidth: '52rem', margin: '0 auto' }}>
-        <div>
+        {/* Right: Roadmap */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', minWidth: '280px' }}>
           <SectionLabel>Roadmap</SectionLabel>
-          <h2 style={{ fontFamily: 'var(--font-headline)', fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, color: '#dfe2f3' }}>
+          <h2 style={{ fontFamily: 'var(--font-headline)', fontSize: 'clamp(1.25rem, 3vw, 1.75rem)', fontWeight: 700, color: '#dfe2f3', marginBottom: '0.75rem' }}>
             Platform Readiness
           </h2>
+          <GlassCard style={{ padding: '1rem 1.5rem' }}>
+            <RoadmapRow icon="rocket_launch" status="Live" title="Core Escrow" desc="EVM infrastructure deployed on Ethereum." />
+            <RoadmapRow icon="wallet" status="Live" title="Wallet Integration" desc="RainbowKit + MetaMask fully operational." />
+            <RoadmapRow icon="handshake" status="Beta" title="Lease Creation" desc="UX for milestone-based lease agreements." />
+            <RoadmapRow icon="gavel" status="Upcoming" title="Dispute Resolution" desc="On-chain arbitration protocol." />
+            <RoadmapRow icon="lan" status="Upcoming" title="Multi-chain" desc="Deploy to Base L2 for sub-cent gas fees." />
+          </GlassCard>
         </div>
-
-        <GlassCard style={{ padding: '1.5rem 2rem' }}>
-          <RoadmapRow icon="rocket_launch" status="Live" title="Core Escrow Contracts" desc="Base EVM escrow infrastructure deployed and active on Ethereum." />
-          <RoadmapRow icon="wallet" status="Live" title="Wallet Integration" desc="RainbowKit + Wagmi + MetaMask web3 frontend fully operational." />
-          <RoadmapRow icon="handshake" status="Beta" title="Lease Creation Flow" desc="UX for landlords and tenants to agree on milestones and terms." />
-          <RoadmapRow icon="gavel" status="Upcoming" title="Dispute Resolution" desc="On-chain arbitration protocol for handling broken lease conditions." />
-          <RoadmapRow icon="fingerprint" status="Upcoming" title="Identity Layer" desc="Decentralized KYC for verified, privacy-preserving participant profiles." />
-          <RoadmapRow icon="lan" status="Upcoming" title="Multi-chain (Base L2)" desc="Deploy to Base L2 for sub-cent gas fees — already in Wagmi config." />
-        </GlassCard>
       </div>
     ),
   },
 
-  /* ── 10 CONCLUSION ── */
+  /* ── 10  CONCLUSION ── */
   {
     id: 10,
     label: 'Q&A',
@@ -590,7 +605,7 @@ function releaseFunds() public {
 ];
 
 /* ─────────────────────────────────────────────
-   PRESENTATION COMPONENT
+   PRESENTATION ENGINE
    ───────────────────────────────────────────── */
 
 export default function PitchDeck() {
@@ -612,10 +627,8 @@ export default function PitchDeck() {
 
   const handleDownload = useCallback(() => {
     setPrintMode(true);
-    // Allow React to render the print view before printing
     setTimeout(() => {
       window.print();
-      // Return to slideshow after print dialog closes
       setTimeout(() => setPrintMode(false), 500);
     }, 300);
   }, []);
@@ -654,7 +667,7 @@ export default function PitchDeck() {
 
   const slide = slides[current];
 
-  /* ── Print Mode: render all slides stacked ── */
+  /* ── Print Mode ── */
   if (printMode) {
     return (
       <div className="pitch-print-root">
@@ -686,10 +699,7 @@ export default function PitchDeck() {
             break-after: auto;
           }
           @media print {
-            @page {
-              size: landscape;
-              margin: 0;
-            }
+            @page { size: landscape; margin: 0; }
             html, body {
               -webkit-print-color-adjust: exact !important;
               print-color-adjust: exact !important;
@@ -697,11 +707,7 @@ export default function PitchDeck() {
             }
             body * { visibility: hidden; }
             .pitch-print-root, .pitch-print-root * { visibility: visible; }
-            .pitch-print-root {
-              position: absolute;
-              left: 0;
-              top: 0;
-            }
+            .pitch-print-root { position: absolute; left: 0; top: 0; }
             .pitch-print-slide {
               position: relative;
               width: 100vw;
@@ -718,6 +724,7 @@ export default function PitchDeck() {
     );
   }
 
+  /* ── Slideshow Mode ── */
   return (
     <div
       style={{
@@ -737,7 +744,7 @@ export default function PitchDeck() {
       {/* Background glow */}
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 40%, rgba(0,212,255,0.06) 0%, rgba(82,3,213,0.04) 50%, transparent 100%)', pointerEvents: 'none' }} />
 
-      {/* ── Progress bar ── */}
+      {/* Progress bar */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: 'rgba(255,255,255,0.03)', zIndex: 10 }}>
         <motion.div
           animate={{ width: `${((current + 1) / total) * 100}%` }}
@@ -746,7 +753,7 @@ export default function PitchDeck() {
         />
       </div>
 
-      {/* ── Slide Content ── */}
+      {/* Slide Content */}
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         <AnimatePresence mode="wait">
           <motion.div
@@ -762,7 +769,7 @@ export default function PitchDeck() {
         </AnimatePresence>
       </div>
 
-      {/* ── Bottom Bar ── */}
+      {/* Bottom Bar */}
       <div
         style={{
           display: 'flex',
@@ -863,7 +870,6 @@ export default function PitchDeck() {
         </div>
       </div>
 
-      {/* Keyboard hints (fades after 5 seconds) */}
       <KeyboardHint />
 
       <style>{`
