@@ -1,14 +1,22 @@
 'use client';
 
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { staggerContainer, staggerItem, fadeInUp, fadeInLeft, fadeInRight, viewportConfig } from '@/lib/animations';
+import { staggerContainer, staggerItem, fadeInLeft, fadeInRight, viewportConfig } from '@/lib/animations';
 import AnimatedSection from '@/components/AnimatedSection';
 import Footer from '@/components/Footer';
+import EscrowCard from '@/components/EscrowCard';
 import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useUserEscrows, useTotalEscrows } from '@/lib/hooks';
+import Link from 'next/link';
 
 export default function DashboardPage() {
   const { isConnected, address } = useAccount();
+  const { data: escrowAddresses } = useUserEscrows(address);
+  const { data: totalEscrows } = useTotalEscrows();
+
+  const escrows = (escrowAddresses as `0x${string}`[]) || [];
 
   if (!isConnected) {
     return (
@@ -41,7 +49,7 @@ export default function DashboardPage() {
             </h2>
             <p style={{ color: 'var(--color-on-surface-variant)', maxWidth: '24rem' }}>
               Connect your wallet to access the RentEscrow dashboard, manage
-              your escrow positions, and earn yield on Aave.
+              your escrow positions, and track your leases.
             </p>
             <ConnectButton />
           </div>
@@ -87,10 +95,30 @@ export default function DashboardPage() {
           }}
         >
           {[
-            { label: 'Total Supplied', value: '—', color: 'var(--color-primary-container)', sub: 'No positions yet' },
-            { label: 'Total Yield Earned', value: '—', color: 'var(--color-success)', sub: 'Supply assets to earn' },
-            { label: 'Active Escrows', value: '0', color: 'var(--color-secondary)', sub: 'Create a new lease' },
-            { label: 'Health Factor', value: '—', color: 'var(--color-primary)', sub: 'Supply collateral to view' },
+            {
+              label: 'Your Escrows',
+              value: escrows.length.toString(),
+              color: 'var(--color-primary-container)',
+              sub: escrows.length > 0 ? 'Active positions' : 'Create your first lease',
+            },
+            {
+              label: 'Network Escrows',
+              value: totalEscrows !== undefined ? totalEscrows.toString() : '—',
+              color: 'var(--color-secondary)',
+              sub: 'Total on the platform',
+            },
+            {
+              label: 'Yield Protocol',
+              value: 'Aave V3',
+              color: 'var(--color-success)',
+              sub: 'Integration planned',
+            },
+            {
+              label: 'Network',
+              value: 'Sepolia',
+              color: 'var(--color-primary)',
+              sub: 'Ethereum Testnet',
+            },
           ].map((s) => (
             <motion.div
               key={s.label}
@@ -111,121 +139,89 @@ export default function DashboardPage() {
           ))}
         </motion.div>
 
-        {/* ── Two Column: Positions + Aave Markets ─ */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr',
-            gap: '1.5rem',
-            marginBottom: '2rem',
-          }}
-          className="dashboard-grid"
-        >
-          {/* Supplied Positions */}
-          <AnimatedSection variants={fadeInLeft}>
-            <div className="glass-card" style={{ padding: '1.5rem', overflow: 'hidden' }}>
-              <div
+        {/* ── Quick Actions ─────────────────────────── */}
+        <AnimatedSection>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+              gap: '1rem',
+              marginBottom: '2rem',
+            }}
+          >
+            <Link href="/leases" style={{ textDecoration: 'none' }}>
+              <motion.div
+                className="glass-card"
                 style={{
+                  padding: '2rem',
                   display: 'flex',
-                  justifyContent: 'space-between',
                   alignItems: 'center',
-                  marginBottom: '1.5rem',
+                  gap: '1.25rem',
+                  cursor: 'pointer',
                 }}
+                whileHover={{ scale: 1.02, boxShadow: '0 0 30px rgba(0, 212, 255, 0.15)' }}
+                whileTap={{ scale: 0.98 }}
               >
-                <h3 style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '1.125rem' }}>
-                  Your Positions
-                </h3>
-                <motion.button
-                  className="btn-gradient"
-                  style={{ padding: '0.5rem 1.25rem', fontSize: '0.8rem' }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <div
+                  className="icon-box"
+                  style={{
+                    background: 'rgba(0, 212, 255, 0.1)',
+                    color: 'var(--color-primary-container)',
+                    flexShrink: 0,
+                  }}
                 >
-                  + Supply
-                </motion.button>
-              </div>
+                  <span className="material-symbols-outlined" style={{ fontSize: '1.5rem' }}>
+                    add_circle
+                  </span>
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.25rem' }}>Create Escrow</h3>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--color-on-surface-variant)' }}>
+                    Lock ETH in a secure contract
+                  </p>
+                </div>
+              </motion.div>
+            </Link>
 
-              {/* Empty state */}
-              <div
+            <Link href="/network" style={{ textDecoration: 'none' }}>
+              <motion.div
+                className="glass-card"
                 style={{
-                  textAlign: 'center',
-                  padding: '3rem 1rem',
-                  color: 'var(--color-on-surface-variant)',
+                  padding: '2rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1.25rem',
+                  cursor: 'pointer',
                 }}
+                whileHover={{ scale: 1.02, boxShadow: '0 0 30px rgba(82, 3, 213, 0.15)' }}
+                whileTap={{ scale: 0.98 }}
               >
-                <span
-                  className="material-symbols-outlined"
-                  style={{ fontSize: '3rem', color: 'var(--color-outline-variant)', display: 'block', marginBottom: '1rem' }}
+                <div
+                  className="icon-box"
+                  style={{
+                    background: 'rgba(205, 189, 255, 0.1)',
+                    color: 'var(--color-secondary)',
+                    flexShrink: 0,
+                  }}
                 >
-                  account_balance
-                </span>
-                <p style={{ fontWeight: 500, marginBottom: '0.5rem' }}>No positions yet</p>
-                <p style={{ fontSize: '0.875rem', color: 'var(--color-outline)' }}>
-                  Supply assets to Aave to start earning yield on your deposits.
-                </p>
-              </div>
-            </div>
-          </AnimatedSection>
-
-          {/* Aave Markets */}
-          <AnimatedSection variants={fadeInRight}>
-            <div className="glass-card" style={{ padding: '1.5rem', overflow: 'hidden' }}>
-              <h3
-                style={{
-                  fontFamily: 'var(--font-headline)',
-                  fontWeight: 700,
-                  fontSize: '1.125rem',
-                  marginBottom: '1.5rem',
-                }}
-              >
-                Aave Markets
-              </h3>
-
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '2fr 1.5fr 1.5fr 2fr',
-                  padding: '0.75rem 0',
-                  borderBottom: '1px solid var(--color-outline-variant)',
-                  fontSize: '0.7rem',
-                  color: 'var(--color-outline)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                  fontFamily: 'var(--font-headline)',
-                }}
-              >
-                <span>Asset</span>
-                <span>Supply APY</span>
-                <span>Borrow APY</span>
-                <span>TVL</span>
-              </div>
-
-              {/* Empty state */}
-              <div
-                style={{
-                  textAlign: 'center',
-                  padding: '3rem 1rem',
-                  color: 'var(--color-on-surface-variant)',
-                }}
-              >
-                <span
-                  className="material-symbols-outlined"
-                  style={{ fontSize: '3rem', color: 'var(--color-outline-variant)', display: 'block', marginBottom: '1rem' }}
-                >
-                  sync
-                </span>
-                <p style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Fetching live market data...</p>
-                <p style={{ fontSize: '0.875rem', color: 'var(--color-outline)' }}>
-                  Market data will be fetched from Aave V3 once the protocol is connected.
-                </p>
-              </div>
-            </div>
-          </AnimatedSection>
-        </div>
+                  <span className="material-symbols-outlined" style={{ fontSize: '1.5rem' }}>
+                    lan
+                  </span>
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.25rem' }}>Explore Network</h3>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--color-on-surface-variant)' }}>
+                    View infrastructure & architecture
+                  </p>
+                </div>
+              </motion.div>
+            </Link>
+          </div>
+        </AnimatedSection>
 
         {/* ── Active Escrow Leases ─────────────────── */}
         <AnimatedSection>
-          <div className="glass-card" style={{ padding: '1.5rem', marginBottom: '2rem', overflow: 'hidden' }}>
+          <div style={{ marginBottom: '2rem' }}>
             <div
               style={{
                 display: 'flex',
@@ -235,37 +231,49 @@ export default function DashboardPage() {
               }}
             >
               <h3 style={{ fontFamily: 'var(--font-headline)', fontWeight: 700, fontSize: '1.125rem' }}>
-                Active Escrow Leases
+                Recent Escrows
               </h3>
-              <motion.button
-                className="btn-gradient"
-                style={{ padding: '0.5rem 1.25rem', fontSize: '0.8rem' }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                + New Lease
-              </motion.button>
+              {escrows.length > 0 && (
+                <Link href="/leases">
+                  <motion.button
+                    className="btn-ghost"
+                    style={{ padding: '0.5rem 1.25rem', fontSize: '0.8rem' }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    View All →
+                  </motion.button>
+                </Link>
+              )}
             </div>
 
-            {/* Empty state */}
-            <div
-              style={{
-                textAlign: 'center',
-                padding: '3rem 1rem',
-                color: 'var(--color-on-surface-variant)',
-              }}
-            >
-              <span
-                className="material-symbols-outlined"
-                style={{ fontSize: '3rem', color: 'var(--color-outline-variant)', display: 'block', marginBottom: '1rem' }}
+            {escrows.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {escrows.slice(0, 3).map((addr) => (
+                  <EscrowCard key={addr} escrowAddress={addr} />
+                ))}
+              </div>
+            ) : (
+              <div
+                className="glass-card"
+                style={{
+                  textAlign: 'center',
+                  padding: '3rem 1rem',
+                  color: 'var(--color-on-surface-variant)',
+                }}
               >
-                handshake
-              </span>
-              <p style={{ fontWeight: 500, marginBottom: '0.5rem' }}>No active leases</p>
-              <p style={{ fontSize: '0.875rem', color: 'var(--color-outline)' }}>
-                Create a new escrow lease to get started. Your deposits will be secured on-chain.
-              </p>
-            </div>
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '3rem', color: 'var(--color-outline-variant)', display: 'block', marginBottom: '1rem' }}
+                >
+                  handshake
+                </span>
+                <p style={{ fontWeight: 500, marginBottom: '0.5rem' }}>No active leases</p>
+                <p style={{ fontSize: '0.875rem', color: 'var(--color-outline)' }}>
+                  Create a new escrow lease to get started. Your deposits will be secured on-chain.
+                </p>
+              </div>
+            )}
           </div>
         </AnimatedSection>
       </div>

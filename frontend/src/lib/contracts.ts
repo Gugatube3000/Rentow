@@ -2,6 +2,55 @@
  * Smart contract ABIs and addresses for RentEscrow
  */
 
+// ── EscrowFactory ABI ─────────────────────────────────────
+export const ESCROW_FACTORY_ABI = [
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, name: 'escrowAddress', type: 'address' },
+      { indexed: true, name: 'tenant', type: 'address' },
+      { indexed: true, name: 'landlord', type: 'address' },
+      { indexed: false, name: 'amount', type: 'uint256' },
+      { indexed: false, name: 'durationSeconds', type: 'uint256' },
+      { indexed: false, name: 'yieldPercent', type: 'uint256' },
+    ],
+    name: 'EscrowCreated',
+    type: 'event',
+  },
+  {
+    inputs: [
+      { name: '_landlord', type: 'address' },
+      { name: '_durationSeconds', type: 'uint256' },
+      { name: '_yieldPercent', type: 'uint256' },
+    ],
+    name: 'createEscrow',
+    outputs: [{ name: '', type: 'address' }],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getAllEscrows',
+    outputs: [{ name: '', type: 'address[]' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: '_user', type: 'address' }],
+    name: 'getEscrows',
+    outputs: [{ name: '', type: 'address[]' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'totalEscrows',
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const;
+
 // ── RentEscrow Contract ABI ───────────────────────────────
 export const RENT_ESCROW_ABI = [
   {
@@ -272,8 +321,12 @@ export const AAVE_POOL_ABI = [
 ] as const;
 
 // ── Contract Addresses ────────────────────────────────────
-// Ethereum Sepolia Testnet addresses
+// These are set via environment variables for flexibility across networks
 export const ADDRESSES = {
+  // EscrowFactory — the main entry point
+  ESCROW_FACTORY: (process.env.NEXT_PUBLIC_FACTORY_ADDRESS ||
+    '0x5FbDB2315678afecb367f032d93F642f64180aa3') as `0x${string}`,
+
   // Aave V3 on Sepolia
   AAVE_POOL: '0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951' as `0x${string}`,
   AAVE_UI_DATA_PROVIDER: '0x69529987FA4A075D0C00B0128fa848dc71c9032e' as `0x${string}`,
@@ -282,9 +335,6 @@ export const ADDRESSES = {
   USDC: '0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8' as `0x${string}`,
   DAI: '0xFF34B3d4Aee8ddCd6F9AFFFB6Fe49bD371b8a357' as `0x${string}`,
   WETH: '0xC558DBdd856501FCd9aaF1E62eae57A9F0629a3c' as `0x${string}`,
-
-  // RentEscrow (to be set after deployment)
-  RENT_ESCROW: '0x0000000000000000000000000000000000000000' as `0x${string}`,
 } as const;
 
 // ── Token metadata ────────────────────────────────────────

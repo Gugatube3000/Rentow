@@ -27,13 +27,14 @@ contract RentEscrow {
         uint _durationSeconds,
         uint _yieldPercent
     ) payable {
-        tenant = msg.sender;
+        // tx.origin is the actual wallet, even when called through the Factory
+        tenant = tx.origin;
         landlord = _landlord;
         amount = msg.value;
         yieldPercent = _yieldPercent;
         deadline = block.timestamp + _durationSeconds;
         require(amount > 0, "Send ETH to escrow");
-        emit Deposited(msg.sender, amount);
+        emit Deposited(tx.origin, amount);
     }
 
     /* function deposit() public payable {
